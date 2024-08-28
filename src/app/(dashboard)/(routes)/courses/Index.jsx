@@ -25,8 +25,8 @@ const Course = () => {
       {isLoading ? (
         <LoadingIndicator />
       ) : (
-        <div className="w-full h-screen p-20 mb-10 flex justify-center items-center">
-          <div className="w-full mt-[8rem] h-full gap-10 grid grid-cols-4 ">
+        <div className="w-full h-full p-20 mb-10 flex justify-center items-center">
+          <div className="w-full mt-[4rem] h-full gap-10 grid grid-cols-4 ">
             <div className="w-full flex flex-col gap-5 col-span-1">
               <div
                 onClick={() => setTab(1)}

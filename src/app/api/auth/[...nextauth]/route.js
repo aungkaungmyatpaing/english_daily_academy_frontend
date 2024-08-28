@@ -84,6 +84,9 @@ export const authOptions = {
         const data = await res.json();
         console.log("e data", data);
         if (data.status === "success") {
+          user.enroll = data.data.auth.user.enroll;
+          user.avatar = data.data.auth.user.avatar;
+          user.accessToken = data.data.auth.token;
           return true;
         } else {
           return false;
@@ -103,6 +106,7 @@ export const authOptions = {
         token.email = user.email;
         token.name = user.name;
         token.avatar = user.avatar;
+        token.enroll = user.enroll;
         // Add other user properties if needed
       }
       return token;
@@ -113,6 +117,7 @@ export const authOptions = {
       session.user.name = token.name;
       session.user.avatar = token.avatar;
       session.accessToken = token.accessToken;
+      session.user.enroll = token.enroll;
       // Add other session properties if needed
       return session;
     },

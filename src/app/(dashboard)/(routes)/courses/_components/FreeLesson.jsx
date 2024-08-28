@@ -48,6 +48,7 @@ const FreeLesson = () => {
       setTotalPages(response.data.data.pagination.last_page);
       setTotalItems(response.data.data.pagination.total);
       setMiniLoader(false);
+      console.log(response);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -65,8 +66,6 @@ const FreeLesson = () => {
   };
 
   console.log(data);
-  console.log(totalPages);
-  console.log(totalItems);
 
   return (
     <div className="w-full h-full flex flex-col gap-6">
@@ -92,13 +91,20 @@ const FreeLesson = () => {
                 {data.map((lesson) => (
                   <div
                     key={lesson.id}
-                    className="w-full h-[16rem] border-[3px] hover:border-error duration-700"
+                    className="w-full bg-base-content h-[16rem] border-[3px] overflow-hidden hover:border-error duration-700"
                   >
-                    <img
-                      src={lesson.image}
-                      alt={lesson.name}
-                      className="w-full h-full object-cover"
-                    />
+                    <div className="w-full h-[11rem]">
+                      <img
+                        src={lesson.image}
+                        alt={lesson.name}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div className="w-full h-[5rem] flex justify-center items-center">
+                      <div className="bg-error cursor-pointer w-[90%] h-[2.6rem] flex justify-center items-center text-sm rounded-lg text-white">
+                        Free Course
+                      </div>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -124,8 +130,10 @@ const FreeLesson = () => {
               </div>
             </>
           ) : (
-            <div className="w-full h-[34rem]  flex justify-center items-center">
-              <span className="text-xl font-bold">No Free Course</span>
+            <div className="w-full h-[24rem]  flex justify-center items-center">
+              <span className="text-xl text-error font-bold">
+                No Free Course
+              </span>
             </div>
           )}
         </>
