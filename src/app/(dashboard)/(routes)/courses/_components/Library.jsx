@@ -83,7 +83,7 @@ const Library = () => {
         </div>
       </div>
       {miniLoader ? (
-        <div className="w-full h-[44rem] grid grid-cols-4 gap-6 justify-items-center items-center">
+        <div className="w-full h-[44rem] grid grid-cols-4 gap-16 justify-items-center items-center">
           <div className="skeleton h-[20rem] w-full"></div>
           <div className="skeleton h-[20rem] w-full"></div>
           <div className="skeleton h-[20rem] w-full"></div>

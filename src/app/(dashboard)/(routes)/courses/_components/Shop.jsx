@@ -1,11 +1,13 @@
 "use client";
 import { fetchUserData } from "@/app/api/user";
+import { formatPrice } from "@/helpers/formatPrice";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
 import { toast } from "react-toastify";
+import Cart from "./shop_components/Cart";
 const Shop = () => {
   const session = useSession();
   const router = useRouter();
@@ -20,6 +22,7 @@ const Shop = () => {
   }, [session.status, router]);
 
   const [enrollValue, setEnrollValue] = useState(null);
+  const [Tab, setTab] = useState(1);
 
   const BearerToken = session?.data?.accessToken;
   const [miniLoader, setMiniLoader] = useState(false);
@@ -68,114 +71,212 @@ const Shop = () => {
       fetchData(currentPage);
     }
   }, [BearerToken, currentPage]);
-
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
   const handlePageClick = (event) => {
     const selectedPage = event.selected + 1;
     setCurrentPage(selectedPage);
   };
+
+  const addToCart = async (product_id, quantity) => {
+    console.log(product_id, quantity);
+
+    try {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_HOST}` + "cart/add-to-cart",
+        {
+          product_id,
+          quantity,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${BearerToken}`,
+          },
+        }
+      );
+      if (response.data.status == "success") {
+        toast.success("Add to cart successfully!", {
+          position: "top-right",
+          theme: "dark",
+        });
+      }
+      console.log("Add to cart", response.data);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (error.response) {
+          toast.error(
+            `${error.response.data.message || "Failed to add to cart"}`,
+            {
+              position: "top-right",
+              theme: "dark",
+            }
+          );
+        } else if (error.request) {
+          toast.error("No response from server. Please try again.", {
+            position: "top-right",
+            theme: "dark",
+          });
+        } else {
+          toast.error(`Request error: ${error.message}`, {
+            position: "top-right",
+            theme: "dark",
+          });
+        }
+      } else {
+        toast.error("An unexpected error occurred.", {
+          position: "top-right",
+          theme: "dark",
+        });
+      }
+
+      console.error("Error adding to cart:", error);
+    }
+  };
   return (
     <div className="w-full h-full flex flex-col gap-6">
       <div className="w-full flex justify-start gap-10">
-        <div className="rounded-sm border-b-[4px] border-error">
+        <div
+          onClick={() => setTab(1)}
+          className={`cursor-pointer rounded-sm ${
+            Tab === 1 && "border-b-[4px] border-error"
+          }`}
+        >
           <span className="text-xl font-bold">Shop</span>
         </div>
-        <div className="rounded-sm border-b-[4px] border-error">
+        <div
+          onClick={() => setTab(2)}
+          className={`cursor-pointer rounded-sm  ${
+            Tab === 2 && "border-b-[4px] border-error"
+          }`}
+        >
           <span className="text-xl font-bold">Cart</span>
         </div>
-        <div className="rounded-sm border-b-[4px] border-error">
+        <div
+          onClick={() => setTab(3)}
+          className={`cursor-pointer rounded-sm  ${
+            Tab === 3 && "border-b-[4px] border-error"
+          }`}
+        >
           <span className="text-xl font-bold">Order</span>
         </div>
       </div>
-      {miniLoader ? (
-        <div className="w-full h-[48rem] grid grid-cols-3 gap-6 justify-items-center items-center">
-          <div className="skeleton h-[24rem] w-full"></div>
-          <div className="skeleton h-[24rem] w-full"></div>
-          <div className="skeleton h-[24rem] w-full"></div>
-          <div className="skeleton h-[24rem] w-full"></div>
-          <div className="skeleton h-[24rem] w-full"></div>
-          <div className="skeleton h-[24rem] w-full"></div>
-        </div>
-      ) : (
+      {Tab === 1 && (
         <>
-          {data.length > 0 ? (
+          {miniLoader ? (
+            <div className="w-full h-[48rem] grid grid-cols-3 gap-6 justify-items-center items-center">
+              <div className="skeleton h-[24rem] rounded-xl w-full"></div>
+              <div className="skeleton h-[24rem] rounded-xl w-full"></div>
+              <div className="skeleton h-[24rem] rounded-xl w-full"></div>
+              <div className="skeleton h-[24rem] rounded-xl w-full"></div>
+              <div className="skeleton h-[24rem] rounded-xl w-full"></div>
+              <div className="skeleton h-[24rem] rounded-xl w-full"></div>
+            </div>
+          ) : (
             <>
-              <div className="w-full h-[48rem] justify-items-center grid grid-cols-3 gap-6">
-                {data.map((product) => (
-                  <div
-                    key={product.id}
-                    className="w-full h-[24rem] overflow-hidden rounded-xl bg-base-content"
-                  >
-                    <div className="w-full rounded-xl h-[50%] overflow-hidden">
-                      <img
-                        src={product.image}
-                        alt={product.name}
-                        className="w-full h-full object-cover duration-300 hover:scale-110"
-                      />
-                    </div>
-                    <div className="w-full h-[50%] px-5 flex flex-col justify-center items-center gap-5 ">
-                      <div className="w-full flex justify-start items-center gap-5">
-                        <div className="w-[4rem] text-center rounded-full bg-error ">
-                          Item
+              {data.length > 0 ? (
+                <>
+                  <div className="w-full h-[48rem] justify-items-center grid grid-cols-3 gap-6">
+                    {data.map((product) => (
+                      <div
+                        key={product.id}
+                        className="w-full h-[24rem] overflow-hidden rounded-xl bg-base-content"
+                      >
+                        <div className="w-full rounded-xl h-[50%] overflow-hidden">
+                          <img
+                            src={product.image}
+                            alt={product.name}
+                            className="w-full h-full object-cover duration-300 hover:scale-110"
+                          />
                         </div>
-                        <span className="text-base-100">{product.name}</span>
-                      </div>
-                      <div className="w-full flex justify-start items-center gap-5">
-                        <div className="w-[4rem] text-center rounded-full bg-error ">
-                          Price
-                        </div>
-                        {product.is_discount && product.discount_price > 0 ? (
-                          <div className="flex gap-3">
-                            <span className="text-base-100 line-through">
-                              {product.price} Ks
-                            </span>
+                        <div className="w-full h-[50%] px-5 flex flex-col justify-center items-center gap-5 ">
+                          <div className="w-full flex justify-start items-center gap-5">
+                            <div className="w-[4rem] text-center rounded-full bg-error ">
+                              Item
+                            </div>
                             <span className="text-base-100">
-                              {product.discount_price} Ks
+                              {product.name}
+                            </span>
+                            <span className="text-error text-xs font-mono">
+                              <i className="fa-solid fa-xmark text-xs"></i>
+                              {product.quantity}
                             </span>
                           </div>
-                        ) : (
-                          <span className="text-base-100">
-                            {product.price} Ks
-                          </span>
-                        )}
+                          <div className="w-full flex justify-start items-center gap-5">
+                            <div className="w-[4rem] text-center rounded-full bg-error ">
+                              Price
+                            </div>
+                            {product.is_discount &&
+                            product.discount_price > 0 ? (
+                              <div className="flex gap-3">
+                                <span className="text-base-100 line-through">
+                                  {formatPrice(product.price ?? 0)} Ks
+                                </span>
+                                <span className="text-base-100">
+                                  {formatPrice(product.discount_price ?? 0)} Ks
+                                </span>
+                              </div>
+                            ) : (
+                              <span className="text-base-100">
+                                {formatPrice(product.price ?? 0)} Ks
+                              </span>
+                            )}
+                          </div>
+                          <div className="w-full flex justify-center items-center">
+                            {product.instock == true && product.quantity > 0 ? (
+                              <button
+                                onClick={() => addToCart(product.id, 1)}
+                                className="btn btn-error text-white rounded-xl"
+                              >
+                                <i className="fa-regular fa-cart-shopping"></i>
+                                Add to Cart
+                              </button>
+                            ) : (
+                              <button className="btn btn-error text-white rounded-xl">
+                                <i className="fa-regular fa-ban"></i>
+                                Out of Stock
+                              </button>
+                            )}
+                          </div>
+                        </div>
                       </div>
-                      <div className="w-full flex justify-center items-center">
-                        <button className="btn btn-error text-white rounded-xl">
-                          <i className="fa-regular fa-cart-shopping"></i>
-                          Add to Cart
-                        </button>
-                      </div>
-                    </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-              <div className="w-full flex justify-center items-center mt-4">
-                <ReactPaginate
-                  previousLabel={"Previous"}
-                  nextLabel={"Next"}
-                  breakLabel={"..."}
-                  breakClassName={"break-me"}
-                  pageCount={totalPages}
-                  marginPagesDisplayed={2}
-                  pageRangeDisplayed={3}
-                  onPageChange={handlePageClick}
-                  containerClassName={"pagination"}
-                  activeClassName={"active"}
-                  pageClassName={"page-item"}
-                  previousClassName={"prev-item"}
-                  nextClassName={"next-item"}
-                  disabledClassName={"disabled-item"}
-                  activeLinkClassName={"active-link"}
-                  className="w-full flex justify-center gap-6 text-xs text-error font-bold"
-                />
-              </div>
+                  <div className="w-full flex justify-center items-center mt-4">
+                    <ReactPaginate
+                      previousLabel={"Previous"}
+                      nextLabel={"Next"}
+                      breakLabel={"..."}
+                      breakClassName={"break-me"}
+                      pageCount={totalPages}
+                      marginPagesDisplayed={2}
+                      pageRangeDisplayed={3}
+                      onPageChange={handlePageClick}
+                      containerClassName={"pagination"}
+                      activeClassName={"active"}
+                      pageClassName={"page-item"}
+                      previousClassName={"prev-item"}
+                      nextClassName={"next-item"}
+                      disabledClassName={"disabled-item"}
+                      activeLinkClassName={"active-link"}
+                      className="w-full flex justify-center gap-6 text-xs text-error font-bold"
+                    />
+                  </div>
+                </>
+              ) : (
+                <div className="w-full h-[24rem]  flex justify-center items-center">
+                  <span className="text-xl text-error font-bold">
+                    No Premium Course
+                  </span>
+                </div>
+              )}
             </>
-          ) : (
-            <div className="w-full h-[24rem]  flex justify-center items-center">
-              <span className="text-xl text-error font-bold">
-                No Premium Course
-              </span>
-            </div>
           )}
+        </>
+      )}
+      {Tab === 2 && (
+        <>
+          <Cart BearerToken={BearerToken} />
         </>
       )}
     </div>
