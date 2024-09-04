@@ -266,7 +266,7 @@ const Shop = () => {
               ) : (
                 <div className="w-full h-[24rem]  flex justify-center items-center">
                   <span className="text-xl text-error font-bold">
-                    No Premium Course
+                    No Product
                   </span>
                 </div>
               )}

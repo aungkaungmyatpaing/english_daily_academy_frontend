@@ -14,6 +14,7 @@ const LoginPage = () => {
   const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const loginForm = true;
+  const mainLoading = useSelector((state) => state.mainLoading.mainLoading);
 
   const dispatch = useDispatch();
 

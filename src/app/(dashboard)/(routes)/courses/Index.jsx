@@ -14,8 +14,9 @@ import FAQ from "./_components/FAQ";
 import { motion, AnimatePresence } from "framer-motion";
 
 const Course = () => {
+  const mainLoading = useSelector((state) => state.mainLoading.mainLoading);
   const dispatch = useDispatch();
-  const isLoading = useSelector((state) => state.mainLoading);
+
   const [Tab, setTab] = useState(1);
 
   useEffect(() => {
@@ -23,7 +24,7 @@ const Course = () => {
   }, []);
   return (
     <>
-      {isLoading ? (
+      {mainLoading ? (
         <LoadingIndicator />
       ) : (
         <AnimatePresence>

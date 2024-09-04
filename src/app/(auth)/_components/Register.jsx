@@ -16,6 +16,7 @@ const RegisterPage = () => {
   const [password_confirmation, setPasswordConfirmation] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const loginForm = false;
+  const mainLoading = useSelector((state) => state.mainLoading.mainLoading);
 
   const dispatch = useDispatch();
 

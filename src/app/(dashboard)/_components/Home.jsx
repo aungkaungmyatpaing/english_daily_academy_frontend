@@ -12,7 +12,8 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const HomePage = ({ cms }) => {
   const dispatch = useDispatch();
-  const isLoading = useSelector((state) => state.mainLoading);
+  const mainLoading = useSelector((state) => state.mainLoading.mainLoading);
+
   const banner = cms.cms.banner;
   const testimonail = cms.cms.testimonail;
   const faqs = cms.cms.faq;
@@ -80,7 +81,7 @@ const HomePage = ({ cms }) => {
 
   return (
     <>
-      {isLoading ? (
+      {mainLoading ? (
         <LoadingIndicator />
       ) : (
         <AnimatePresence>
