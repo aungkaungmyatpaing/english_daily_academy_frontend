@@ -323,6 +323,62 @@ const Cart = ({ BearerToken }) => {
     }
   };
 
+  useEffect(() => {
+    checkoutInputForTabJump();
+  }, []);
+
+  const checkoutInputForTabJump = () => {
+    let tempErrors = {};
+
+    // Name validation: must be a string and <= 255 characters
+    if (!name.trim()) {
+      tempErrors.name = "Name is required";
+    } else if (name.length < 2) {
+      tempErrors.name = "Name must be at least 2 characters long";
+    } else if (name.length > 255) {
+      tempErrors.name = "Name cannot exceed 255 characters";
+    }
+
+    // Phone validation
+    if (!phone.trim()) {
+      tempErrors.phone = "Phone is required";
+    } else if (phone.startsWith("095")) {
+      if (phone.length !== 9) {
+        tempErrors.phone =
+          "Phone must be exactly 9 digits long when starting with '095'";
+      }
+    } else if (phone.length !== 11) {
+      tempErrors.phone = "Phone must be exactly 11 digits long";
+    }
+
+    // Region validation
+    if (!regionId) {
+      tempErrors.regionId = "Please select a region";
+    }
+
+    // Township validation
+    if (!townshipId) {
+      tempErrors.townshipId = "Please select a township";
+    }
+
+    // Address validation
+    if (!address.trim()) {
+      tempErrors.address = "Address is required";
+    } else if (address.length < 10) {
+      tempErrors.address = "Address must be at least 10 characters long";
+    }
+
+    if (Object.keys(tempErrors).length === 0) {
+      // Proceed to the next step if there are no errors
+      console.log("Validation passed, proceed to the next step");
+      dispatch(setCheckoutFormValidated(true));
+      document.getElementById("checkout_modal").close();
+      // Add your logic here for the next step
+    } else {
+      dispatch(setCheckoutFormValidated(false));
+    }
+  };
+
   const checkoutInputValidation = () => {
     let tempErrors = {};
 
@@ -372,6 +428,8 @@ const Cart = ({ BearerToken }) => {
       dispatch(setCheckoutFormValidated(true));
       document.getElementById("checkout_modal").close();
       // Add your logic here for the next step
+    } else {
+      dispatch(setCheckoutFormValidated(false));
     }
   };
 
@@ -493,7 +551,15 @@ const Cart = ({ BearerToken }) => {
       </dialog>
 
       {checkoutFormValidated ? (
-        <Checkout />
+        <Checkout
+          Data={Data}
+          BearerToken={BearerToken}
+          name={name}
+          phone={phone}
+          regionId={regionId}
+          townshipId={townshipId}
+          address={address}
+        />
       ) : (
         <>
           {miniLoader ? (
