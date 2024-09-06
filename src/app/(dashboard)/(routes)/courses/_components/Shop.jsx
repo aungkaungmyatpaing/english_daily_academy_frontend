@@ -279,6 +279,7 @@ const Shop = () => {
           <Cart BearerToken={BearerToken} />
         </>
       )}
+      {Tab === 3 && <>Order</>}
     </div>
   );
 };

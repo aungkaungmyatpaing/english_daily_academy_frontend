@@ -12,6 +12,7 @@
     "@reduxjs/toolkit": "^2.2.7",
     "axios": "^1.7.4",
     "framer-motion": "^11.3.31",
+    "lottie-react": "^2.4.0",
     "next": "14.2.5",
     "next-auth": "^4.24.7",
     "react": "^18",

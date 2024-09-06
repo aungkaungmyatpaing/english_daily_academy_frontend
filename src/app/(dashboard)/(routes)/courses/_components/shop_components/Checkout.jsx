@@ -1,10 +1,12 @@
 "use client";
 
 import { formatPrice } from "@/helpers/formatPrice";
-import { setCheckoutFormValidated } from "@/store";
+import { setCheckoutDone, setCheckoutFormValidated } from "@/store";
 import axios from "axios";
+import Lottie from "lottie-react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 const Checkout = ({
   Data,
@@ -15,10 +17,12 @@ const Checkout = ({
   townshipId,
   address,
 }) => {
+  const LottieDone = require("../../../../../../../public/assets/images/checkoutdone");
   const [PaymentData, setPaymentData] = useState([]);
   const [miniLoader, setMiniLoader] = useState(true);
   const [miniTab, setMiniTab] = useState(1);
   const [error, setError] = useState("");
+  const [selectedFile, setSelectedFile] = useState(null);
 
   const checkoutFormValidated = useSelector(
     (state) => state.mainLoading.checkoutFormValidated
@@ -59,19 +63,20 @@ const Checkout = ({
   };
 
   const checkoutApi = async () => {
+    const formData = new FormData();
+    formData.append("region_id", regionId ?? null);
+    formData.append("township_id", townshipId ?? null);
+    formData.append("cod", 0);
+    formData.append("payment_id", PaymentData[0].id ?? null);
+    formData.append("name", name ?? null);
+    formData.append("phone", phone ?? null);
+    formData.append("address", address ?? null);
+
+    formData.append("slip", selectedFile);
     try {
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_HOST}` + "checkout",
-        {
-          region_id: regionId ?? null,
-          township_id: townshipId ?? null,
-          cod: 0,
-          payment_id: PaymentData[0].id ?? null,
-          name: name ?? null,
-          phone: phone ?? null,
-          address: address ?? null,
-          slip: selectedImage,
-        },
+        formData,
         {
           headers: {
             Authorization: `Bearer ${BearerToken}`, // Include Bearer token
@@ -79,8 +84,39 @@ const Checkout = ({
         }
       );
       console.log(response);
+      if (response.data.status == "success") {
+        toast.success("Checkout successfully!", {
+          position: "top-right",
+          theme: "dark",
+        });
+        setMiniTab(4);
+      }
     } catch (error) {
-      console.error("Error fetching data:", error);
+      if (axios.isAxiosError(error)) {
+        if (error.response) {
+          toast.error(`${error.response.data.message || "Checkout failed"}`, {
+            position: "top-right",
+            theme: "dark",
+          });
+        } else if (error.request) {
+          toast.error("No response from server. Please try again.", {
+            position: "top-right",
+            theme: "dark",
+          });
+        } else {
+          toast.error(`Request error: ${error.message}`, {
+            position: "top-right",
+            theme: "dark",
+          });
+        }
+      } else {
+        toast.error("An unexpected error occurred.", {
+          position: "top-right",
+          theme: "dark",
+        });
+      }
+
+      console.error("Error adding to cart:", error);
     }
   };
 
@@ -93,6 +129,7 @@ const Checkout = ({
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+      setSelectedFile(file); // Store the original file object
       const reader = new FileReader();
       reader.onload = (e) => {
         setSelectedImage(e.target.result);
@@ -104,10 +141,11 @@ const Checkout = ({
 
   const removeImage = () => {
     setSelectedImage(null);
+    setSelectedFile(null);
   };
 
   const handleProceed = () => {
-    if (!selectedImage) {
+    if (!selectedImage && !selectedFile) {
       setError("Please upload an image before proceeding.");
       return;
     }
@@ -255,12 +293,12 @@ const Checkout = ({
                   Cancel Checkout <i className="fa-solid fa-circle-xmark"></i>
                 </button>
                 <div className="flex gap-4">
-                  <button
+                  {/* <button
                     onClick={() => handleMiniTabBack()}
                     className="btn btn-error rounded-xl text-white"
                   >
                     <i className="fa-solid fa-backward-step"></i>Back
-                  </button>
+                  </button> */}
                   <button
                     onClick={() => handleMiniTabNext()}
                     className="btn btn-error rounded-xl text-white"
@@ -462,26 +500,6 @@ const Checkout = ({
               <h3 className="font-bold text-white">
                 Step 1: Transfer 20000 MMK to following account
               </h3>
-              <div className="w-full flex flex-col gap-5">
-                <div className="w-full flex gap-5 items-center">
-                  <i className="fa-solid fa-circle-check text-error"></i>
-                  <span className="text-white">
-                    Wallet Name: {PaymentData[0].wallet_name ?? "N/A"}
-                  </span>
-                </div>
-                <div className="w-full flex gap-5 items-center">
-                  <i className="fa-solid fa-circle-check text-error"></i>
-                  <span className="text-white">
-                    Phone Number: {PaymentData[0].account_number ?? "N/A"}
-                  </span>
-                </div>
-                <div className="w-full flex gap-5 items-center">
-                  <i className="fa-solid fa-circle-check text-error"></i>
-                  <span className="text-white">
-                    Account Name: {PaymentData[0].account_name ?? "N/A"}
-                  </span>
-                </div>
-              </div>
               <h3 className="font-bold text-white">
                 Step 2: Take a screenshot of transaction
               </h3>
@@ -491,27 +509,17 @@ const Checkout = ({
               <h3 className="font-bold text-white">
                 Step 4: Wait for payment confirmation and start learning
               </h3>
-              <div className="w-full flex justify-between">
-                <button
-                  onClick={() => handleBack()}
-                  className="btn btn-error rounded-xl text-white"
-                >
-                  Cancel Checkout <i className="fa-solid fa-circle-xmark"></i>
-                </button>
-                <div className="flex gap-4">
-                  <button
-                    onClick={() => handleMiniTabBack()}
-                    className="btn btn-error rounded-xl text-white"
-                  >
-                    <i className="fa-solid fa-backward-step"></i>Back
-                  </button>
-                  <button
-                    onClick={() => handleMiniTabNext()}
-                    className="btn btn-error rounded-xl text-white"
-                  >
-                    Next <i className="fa-solid fa-forward-step"></i>
-                  </button>
-                </div>
+              <div className="w-full h-auto p-5 bg-white rounded-xl flex flex-col justify-center items-center">
+                <Lottie
+                  style={{ width: "150px", height: "150px" }}
+                  animationData={LottieDone}
+                />
+                <span className="text-black font-[500]">
+                  You Purchased Successfully!
+                </span>
+                <span className="text-black font-[500]">
+                  We will confirm your payment in a while
+                </span>
               </div>
             </div>
           )}

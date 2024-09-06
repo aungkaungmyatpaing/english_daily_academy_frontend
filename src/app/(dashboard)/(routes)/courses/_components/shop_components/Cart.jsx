@@ -6,8 +6,10 @@ import { toast } from "react-toastify";
 import Checkout from "./Checkout";
 import { useDispatch, useSelector } from "react-redux";
 import { setCheckoutFormValidated } from "@/store";
+import { useRouter } from "next/navigation";
 
 const Cart = ({ BearerToken }) => {
+  const router = useRouter();
   const [Data, setData] = useState(null);
   const [LocationData, setLocationData] = useState([]);
 
@@ -23,6 +25,8 @@ const Cart = ({ BearerToken }) => {
   const checkoutFormValidated = useSelector(
     (state) => state.mainLoading.checkoutFormValidated
   );
+
+  const checkoutDone = useSelector((state) => state.mainLoading.checkoutDone);
   const dispatch = useDispatch();
 
   const fetchData = async () => {
