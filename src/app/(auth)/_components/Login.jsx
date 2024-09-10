@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import { signIn, useSession } from "next-auth/react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setMainLoading } from "@/store";
 
 const LoginPage = () => {

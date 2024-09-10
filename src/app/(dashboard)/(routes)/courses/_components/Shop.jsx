@@ -8,7 +8,10 @@ import { useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
 import { toast } from "react-toastify";
 import Cart from "./shop_components/Cart";
+import Order from "./shop_components/Order";
+import Lottie from "lottie-react";
 const Shop = () => {
+  const emptylist = require("../../../../../../public/assets/images/emptylist.json");
   const session = useSession();
   const router = useRouter();
   useEffect(() => {
@@ -264,10 +267,11 @@ const Shop = () => {
                   </div>
                 </>
               ) : (
-                <div className="w-full h-[24rem]  flex justify-center items-center">
-                  <span className="text-xl text-error font-bold">
-                    No Product
-                  </span>
+                <div className="w-full h-[40rem] bg-white flex flex-col gap-5 justify-center items-center">
+                  <Lottie
+                    style={{ width: "300px", height: "300px" }}
+                    animationData={emptylist}
+                  />
                 </div>
               )}
             </>
@@ -276,10 +280,21 @@ const Shop = () => {
       )}
       {Tab === 2 && (
         <>
-          <Cart BearerToken={BearerToken} />
+          <div className="w-full flex flex-col gap-5 h-[40rem] bg-white rounded-3xl p-8">
+            <div className="w-full flex items-center justify-between">
+              <span className="text-black font-bold text-xl">My cart</span>
+              <button
+                onClick={() => setTab(1)}
+                className="btn border-1 border-error bg-white hover:bg-white hover:border-error rounded-xl text-error "
+              >
+                Add More <i className="fa-regular fa-plus"></i>
+              </button>
+            </div>
+            <Cart BearerToken={BearerToken} />
+          </div>
         </>
       )}
-      {Tab === 3 && <>Order</>}
+      {Tab === 3 && <Order BearerToken={BearerToken} />}
     </div>
   );
 };

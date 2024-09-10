@@ -7,8 +7,11 @@ import Checkout from "./Checkout";
 import { useDispatch, useSelector } from "react-redux";
 import { setCheckoutFormValidated } from "@/store";
 import { useRouter } from "next/navigation";
+import Lottie from "lottie-react";
 
 const Cart = ({ BearerToken }) => {
+  const emptylist = require("../../../../../../../public/assets/images/emptylist.json");
+
   const router = useRouter();
   const [Data, setData] = useState(null);
   const [LocationData, setLocationData] = useState([]);
@@ -571,13 +574,7 @@ const Cart = ({ BearerToken }) => {
               <span className="loading loading-ring loading-lg text-error"></span>
             </div>
           ) : (
-            <div className="w-full flex flex-col gap-5 h-[40rem] bg-white rounded-3xl p-8">
-              <div className="w-full flex items-center justify-between">
-                <span className="text-black font-bold text-xl">My cart</span>
-                <button className="btn border-1 border-error bg-white hover:bg-white hover:border-error rounded-xl text-error ">
-                  Add More <i className="fa-regular fa-plus"></i>
-                </button>
-              </div>
+            <>
               {Data && Data.carts.length > 0 ? (
                 <div className="w-full h-auto">
                   <div className="w-full h-[24rem] overflow-y-scroll">
@@ -652,11 +649,14 @@ const Cart = ({ BearerToken }) => {
                   </div>
                 </div>
               ) : (
-                <div className="w-full h-full flex justify-center items-center">
-                  <span className="text-xl text-error font-bold">No Item</span>
+                <div className="w-full h-full bg-white flex flex-col gap-5 justify-center items-center">
+                  <Lottie
+                    style={{ width: "300px", height: "300px" }}
+                    animationData={emptylist}
+                  />
                 </div>
               )}
-            </div>
+            </>
           )}
         </>
       )}
