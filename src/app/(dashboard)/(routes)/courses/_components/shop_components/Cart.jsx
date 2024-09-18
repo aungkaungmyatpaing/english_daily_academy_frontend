@@ -575,87 +575,98 @@ const Cart = ({ BearerToken }) => {
             </div>
           ) : (
             <>
-              {Data && Data.carts.length > 0 ? (
-                <div className="w-full h-auto">
-                  <div className="w-full h-[24rem] overflow-y-scroll">
-                    {Data.carts.map((item, index) => (
-                      <div
-                        key={index}
-                        className="w-full flex flex-col justify-between h-[12rem] p-10 border-b-[1px] border-base-300"
-                      >
-                        <div className="w-full text-lg flex gap-36">
-                          <div className="flex gap-8">
-                            <span className="text-black">Product</span>
-                            <span className="border-l-[3px] border-error pl-2 text-error">
-                              {item.product.name}
-                            </span>
-                          </div>
-                          <div className="flex gap-8">
-                            <span className="text-black">Price</span>
-                            <span className="border-l-[3px] border-error pl-2 text-error">
-                              {formatPrice(item.product.price)} Kyats
-                            </span>
-                          </div>
-                          <div className="flex">
-                            <div
-                              onClick={() => HandelRemoveItem(item.id)}
-                              className="px-8 bg-error rounded-full text-white hover:scale-110 duration-300 cursor-pointer"
-                            >
-                              <span>Remove</span>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="w-full flex">
-                          <div className="flex gap-8">
-                            <span className="text-error">Quantity</span>
-                            <div className="w-[8rem] text-white rounded-xl bg-error flex justify-between p-1 items-center h-[2rem]">
-                              <i
-                                onClick={() =>
-                                  HandelDecreaseQuantity(item.id, item.quantity)
-                                }
-                                className="fa-regular fa-circle-minus text-[1.6rem] hover:scale-110 duration-300 cursor-pointer"
-                              ></i>
-                              <span className=" cursor-not-allowed">
-                                {item.quantity}
+              <div className="w-full flex flex-col gap-5 h-[40rem] bg-white rounded-3xl p-8">
+                <div className="w-full flex items-center justify-between">
+                  <span className="text-black font-bold text-xl">My cart</span>
+                </div>
+                {Data && Data.carts.length > 0 ? (
+                  <div className="w-full h-auto">
+                    <div className="w-full h-[24rem] overflow-y-scroll">
+                      {Data.carts.map((item, index) => (
+                        <div
+                          key={index}
+                          className="w-full flex flex-col justify-between h-[12rem] p-10 border-b-[1px] border-base-300"
+                        >
+                          <div className="w-full text-lg flex gap-36">
+                            <div className="flex gap-8">
+                              <span className="text-black">Product</span>
+                              <span className="border-l-[3px] border-error pl-2 text-error">
+                                {item.product.name}
                               </span>
-                              <i
-                                onClick={() =>
-                                  HandelIncreaseQuantity(item.id, item.quantity)
-                                }
-                                className="fa-regular fa-circle-plus text-[1.6rem] hover:scale-110 duration-300 cursor-pointer"
-                              ></i>
+                            </div>
+                            <div className="flex gap-8">
+                              <span className="text-black">Price</span>
+                              <span className="border-l-[3px] border-error pl-2 text-error">
+                                {formatPrice(item.product.price)} Kyats
+                              </span>
+                            </div>
+                            <div className="flex">
+                              <div
+                                onClick={() => HandelRemoveItem(item.id)}
+                                className="px-8 bg-error rounded-full text-white hover:scale-110 duration-300 cursor-pointer"
+                              >
+                                <span>Remove</span>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="w-full flex">
+                            <div className="flex gap-8">
+                              <span className="text-error">Quantity</span>
+                              <div className="w-[8rem] text-white rounded-xl bg-error flex justify-between p-1 items-center h-[2rem]">
+                                <i
+                                  onClick={() =>
+                                    HandelDecreaseQuantity(
+                                      item.id,
+                                      item.quantity
+                                    )
+                                  }
+                                  className="fa-regular fa-circle-minus text-[1.6rem] hover:scale-110 duration-300 cursor-pointer"
+                                ></i>
+                                <span className=" cursor-not-allowed">
+                                  {item.quantity}
+                                </span>
+                                <i
+                                  onClick={() =>
+                                    HandelIncreaseQuantity(
+                                      item.id,
+                                      item.quantity
+                                    )
+                                  }
+                                  className="fa-regular fa-circle-plus text-[1.6rem] hover:scale-110 duration-300 cursor-pointer"
+                                ></i>
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="w-full p-10 h-[10rem] flex justify-between items-center">
-                    <div className="flex justify-center gap-5">
-                      <div className="px-4 text-center flex justify-center items-center h-[1.8rem] bg-error text-white rounded-2xl">
-                        <span>Total</span>
-                      </div>
-                      <span className="text-lg text-error">
-                        {formatPrice(Data.total)} Kyats
-                      </span>
+                      ))}
                     </div>
-                    <button
-                      onClick={() => handelCheckoutModal()}
-                      className="btn btn-error rounded-xl text-white"
-                    >
-                      Check out
-                    </button>
+
+                    <div className="w-full p-10 h-[10rem] flex justify-between items-center">
+                      <div className="flex justify-center gap-5">
+                        <div className="px-4 text-center flex justify-center items-center h-[1.8rem] bg-error text-white rounded-2xl">
+                          <span>Total</span>
+                        </div>
+                        <span className="text-lg text-error">
+                          {formatPrice(Data.total)} Kyats
+                        </span>
+                      </div>
+                      <button
+                        onClick={() => handelCheckoutModal()}
+                        className="btn btn-error rounded-xl text-white"
+                      >
+                        Check out
+                      </button>
+                    </div>
                   </div>
-                </div>
-              ) : (
-                <div className="w-full h-full bg-white flex flex-col gap-5 justify-center items-center">
-                  <Lottie
-                    style={{ width: "300px", height: "300px" }}
-                    animationData={emptylist}
-                  />
-                </div>
-              )}
+                ) : (
+                  <div className="w-full h-full bg-white flex flex-col gap-5 justify-center items-center">
+                    <Lottie
+                      style={{ width: "300px", height: "300px" }}
+                      animationData={emptylist}
+                    />
+                  </div>
+                )}
+              </div>
             </>
           )}
         </>

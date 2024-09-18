@@ -1,11 +1,24 @@
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
-import React from "react";
+import Pricing from ".";
+import LoadingIndicator from "@/app/components/LoadingIndicator";
+import { Suspense } from "react";
 
-export default async function PricingPage() {
+async function CheckSession() {
   const session = await getServerSession();
+
   if (!session) {
     redirect("/register");
+    return null;
   }
-  return <div>PricingPage</div>;
+
+  return <Pricing />;
+}
+
+export default function PricingPage() {
+  return (
+    <Suspense fallback={<LoadingIndicator />}>
+      <CheckSession />
+    </Suspense>
+  );
 }

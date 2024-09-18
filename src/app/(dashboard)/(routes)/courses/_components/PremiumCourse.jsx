@@ -2,6 +2,7 @@
 import { fetchUserData } from "@/app/api/user";
 import axios from "axios";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
@@ -90,7 +91,8 @@ const PremiumCourse = () => {
             <>
               <div className="w-full h-[34rem] grid grid-cols-3 gap-6 justify-items-center">
                 {data.map((lesson) => (
-                  <div
+                  <Link
+                    href={`/courses/${lesson.id}`}
                     key={lesson.id}
                     className="w-full bg-base-content h-[16rem] border-[3px] overflow-hidden hover:border-error duration-700"
                   >
@@ -112,7 +114,7 @@ const PremiumCourse = () => {
                         </div>
                       )}
                     </div>
-                  </div>
+                  </Link>
                 ))}
               </div>
               <div className="w-full flex justify-center items-center mt-4">

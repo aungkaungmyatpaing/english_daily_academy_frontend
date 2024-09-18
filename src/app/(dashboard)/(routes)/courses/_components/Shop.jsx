@@ -278,22 +278,7 @@ const Shop = () => {
           )}
         </>
       )}
-      {Tab === 2 && (
-        <>
-          <div className="w-full flex flex-col gap-5 h-[40rem] bg-white rounded-3xl p-8">
-            <div className="w-full flex items-center justify-between">
-              <span className="text-black font-bold text-xl">My cart</span>
-              <button
-                onClick={() => setTab(1)}
-                className="btn border-1 border-error bg-white hover:bg-white hover:border-error rounded-xl text-error "
-              >
-                Add More <i className="fa-regular fa-plus"></i>
-              </button>
-            </div>
-            <Cart BearerToken={BearerToken} />
-          </div>
-        </>
-      )}
+      {Tab === 2 && <Cart BearerToken={BearerToken} />}
       {Tab === 3 && <Order BearerToken={BearerToken} />}
     </div>
   );

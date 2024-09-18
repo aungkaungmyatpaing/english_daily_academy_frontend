@@ -11,7 +11,13 @@ const Navbar = () => {
 
   console.log("Use Session", session);
 
-  const isActive = (path) => pathname === path;
+  const isActive = (path) => {
+    if (path === "/") {
+      return pathname === "/";
+    }
+    return pathname.startsWith(path);
+  };
+
   const handleLogout = () => {
     signOut();
   };
