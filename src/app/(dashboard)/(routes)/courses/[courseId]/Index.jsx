@@ -51,7 +51,6 @@ const CourseDetailPage = ({ courseId }) => {
       );
       setData(response.data.data.courses);
       setMiniLoader(false);
-      setMiniLoader(false);
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
