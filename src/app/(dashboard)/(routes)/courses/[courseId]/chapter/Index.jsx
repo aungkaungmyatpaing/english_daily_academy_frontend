@@ -1,6 +1,7 @@
 "use client";
 
 import LoadingIndicator from "@/app/components/LoadingIndicator";
+import RichTextComponent from "@/app/components/RichTextComponent";
 import { setMainLoading } from "@/store";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
@@ -8,6 +9,7 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import Test from "./_components/Test";
 
 const ChapterPage = ({ courseId }) => {
   const session = useSession();
@@ -275,9 +277,16 @@ const ChapterPage = ({ courseId }) => {
                               Chapter Name
                             </span>
                             {lessonDetail[0].is_quiz ? (
-                              "This is a Quiz"
+                              <Test
+                                mcq={lessonDetail[0].mcq ?? []}
+                                true_false={lessonDetail[0].true_false ?? []}
+                                BearerToken={BearerToken}
+                              />
                             ) : lessonDetail[0].content ? (
-                              <p className="">{lessonDetail[0].content}</p>
+                              // <p className="">{lessonDetail[0].content}</p>
+                              <RichTextComponent
+                                richTextDocument={lessonDetail[0].content}
+                              />
                             ) : (
                               <div className="w-full flex flex-col justify-center items-center">
                                 {lessonDetail.length > 0 &&

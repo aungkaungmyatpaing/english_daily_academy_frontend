@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@contentful/rich-text-react-renderer": "^15.22.11",
     "@reduxjs/toolkit": "^2.2.7",
     "axios": "^1.7.4",
     "framer-motion": "^11.3.31",
