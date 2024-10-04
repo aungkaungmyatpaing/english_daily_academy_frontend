@@ -281,6 +281,7 @@ const ChapterPage = ({ courseId }) => {
                                 mcq={lessonDetail[0].mcq ?? []}
                                 true_false={lessonDetail[0].true_false ?? []}
                                 BearerToken={BearerToken}
+                                lessonId={lessonDetail[0].id}
                               />
                             ) : lessonDetail[0].content ? (
                               // <p className="">{lessonDetail[0].content}</p>
@@ -306,14 +307,16 @@ const ChapterPage = ({ courseId }) => {
                               </div>
                             )}
 
-                            <div className="w-full flex justify-end">
-                              <button
-                                onClick={() => handleLessonDetailClick()}
-                                className="btn btn-error text-white rounded-lg"
-                              >
-                                Next
-                              </button>
-                            </div>
+                            {!lessonDetail[0].is_quiz && (
+                              <div className="w-full flex justify-end">
+                                <button
+                                  onClick={() => handleLessonDetailClick()}
+                                  className="btn btn-error text-white rounded-lg"
+                                >
+                                  Next
+                                </button>
+                              </div>
+                            )}
                           </div>
                         </div>
                       ) : (
