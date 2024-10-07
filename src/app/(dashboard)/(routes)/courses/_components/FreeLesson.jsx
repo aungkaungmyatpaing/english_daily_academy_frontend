@@ -1,5 +1,6 @@
 "use client";
 
+import { fetchUserData } from "@/app/api/user";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
@@ -11,6 +12,8 @@ import { toast } from "react-toastify";
 const FreeLesson = () => {
   const session = useSession();
   const router = useRouter();
+  const [enrollValue, setEnrollValue] = useState(null);
+
   useEffect(() => {
     if (session.status === "unauthenticated") {
       router.replace("/login");
@@ -57,6 +60,15 @@ const FreeLesson = () => {
 
   useEffect(() => {
     if (BearerToken) {
+      fetchUserData(BearerToken)
+        .then((response) => {
+          console.log(response);
+
+          setEnrollValue(response.data.enroll);
+        })
+        .catch((error) => {
+          console.error("Error fetching user data:", error);
+        });
       fetchData(currentPage);
     }
   }, [BearerToken, currentPage]);
@@ -66,15 +78,24 @@ const FreeLesson = () => {
     setCurrentPage(selectedPage);
   };
 
+  const handelUpgradePremiumClick = () => {
+    router.push("/pricing");
+  };
+
   console.log(data);
 
   return (
     <div className="w-full h-full flex flex-col gap-6">
-      <div className="w-full flex justify-end">
-        <div className="pl-2 border-l-[3px] border-error">
-          <span className="text-xl font-bold">UPGRADE TO PREMIUM</span>
+      {!enrollValue && enrollValue == false && (
+        <div className="w-full flex justify-end">
+          <div
+            onClick={() => handelUpgradePremiumClick()}
+            className="pl-2 border-l-[3px] border-error cursor-pointer"
+          >
+            <span className="text-xl font-bold">UPGRADE TO PREMIUM</span>
+          </div>
         </div>
-      </div>
+      )}
       {miniLoader ? (
         <div className="w-full h-[34rem] grid grid-cols-3 gap-6 justify-items-center items-center">
           <div className="skeleton h-[16rem] w-full"></div>

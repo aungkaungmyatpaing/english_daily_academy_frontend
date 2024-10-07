@@ -9,7 +9,7 @@ async function CheckSession() {
   const session = await getServerSession();
 
   if (!session) {
-    redirect("/register"); // Redirect if no session
+    redirect("/login"); // Redirect if no session
     return null; // This won't be rendered due to redirect
   }
 

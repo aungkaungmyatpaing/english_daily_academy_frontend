@@ -88,11 +88,18 @@ const Library = () => {
     setSelectData(null);
     setTab(1);
   };
+
+  const handelUpgradePremiumClick = () => {
+    router.push("/pricing");
+  };
   return (
     <div className="w-full h-full flex flex-col gap-6">
       {!enrollValue && enrollValue == false && (
         <div className="w-full flex justify-end">
-          <div className="pl-2 border-l-[3px] border-error">
+          <div
+            onClick={() => handelUpgradePremiumClick()}
+            className="pl-2 border-l-[3px] border-error cursor-pointer"
+          >
             <span className="text-xl font-bold">UPGRADE TO PREMIUM</span>
           </div>
         </div>
@@ -159,6 +166,11 @@ const Library = () => {
                         {!enrollValue && enrollValue == false ? (
                           <div
                             key={lesson.id}
+                            onClick={() =>
+                              document
+                                .getElementById("upgrade_premium")
+                                .showModal()
+                            }
                             className="w-full bg-base-content h-[20rem] overflow-hidden "
                           >
                             <div className="w-full h-[16rem] overflow-hidden">
@@ -246,6 +258,23 @@ const Library = () => {
           )}
         </>
       )}
+
+      <dialog id="upgrade_premium" className="modal">
+        <div className="modal-box bg-white rounded-xl">
+          <div className="w-full min-h-[10rem]  flex flex-col gap-3 justify-center items-center">
+            <span className="text-error text-lg font-bold">
+              <i className="fa-solid fa-circle-exclamation text-error"></i>{" "}
+              Alert
+            </span>
+            <p className="text-black">
+              You need to upgrade premium first to view library
+            </p>
+          </div>
+        </div>
+        <form method="dialog" className="modal-backdrop">
+          <button>close</button>
+        </form>
+      </dialog>
     </div>
   );
 };

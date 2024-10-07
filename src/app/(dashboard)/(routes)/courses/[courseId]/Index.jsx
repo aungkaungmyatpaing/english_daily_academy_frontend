@@ -7,11 +7,14 @@ import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 const CourseDetailPage = ({ courseId }) => {
   console.log("courseId", courseId);
+
+  const router = useRouter();
 
   const session = useSession();
   const [miniLoader, setMiniLoader] = useState(true);
@@ -56,6 +59,14 @@ const CourseDetailPage = ({ courseId }) => {
     } finally {
       dispatch(setMainLoading(false));
     }
+  };
+
+  const handelChapterDetailPage = (id) => {
+    router.push(`/courses/${id}/chapter`);
+  };
+
+  const handelUpgradePremiumClick = () => {
+    router.push("/pricing");
   };
 
   useEffect(() => {
@@ -127,17 +138,28 @@ const CourseDetailPage = ({ courseId }) => {
                         {data[0].is_premium == true ? (
                           <>
                             {enrollValue && enrollValue == true ? (
-                              <button className="w-full btn btn-error rounded-lg text-white">
+                              <button
+                                onClick={() =>
+                                  handelChapterDetailPage(data[0].id)
+                                }
+                                className="w-full btn btn-error rounded-lg text-white"
+                              >
                                 View Course Outline
                               </button>
                             ) : (
-                              <button className="w-full btn btn-error rounded-lg text-white">
+                              <button
+                                onClick={() => handelUpgradePremiumClick()}
+                                className="w-full btn btn-error rounded-lg text-white"
+                              >
                                 Upgrade Premium
                               </button>
                             )}
                           </>
                         ) : (
-                          <button className="w-full btn btn-error rounded-lg text-white">
+                          <button
+                            onClick={() => handelChapterDetailPage(data[0].id)}
+                            className="w-full btn btn-error rounded-lg text-white"
+                          >
                             View Course Outline
                           </button>
                         )}

@@ -8,7 +8,7 @@ async function CheckSession({ courseId }) {
   const session = await getServerSession();
 
   if (!session) {
-    redirect("/register");
+    redirect("/login");
   }
 
   return <ChapterPage courseId={courseId} />;
