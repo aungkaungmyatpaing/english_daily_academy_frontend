@@ -175,7 +175,10 @@ const RegisterPage = () => {
               <div className="w-full flex justify-center items-center gap-4">
                 <span className="font-light">
                   Already register?{" "}
-                  <Link href="/login" className="font-bold">
+                  <Link
+                    href="/login"
+                    className="font-bold hover:text-error duration-300"
+                  >
                     Login
                   </Link>
                 </span>

@@ -122,9 +122,12 @@ const LoginPage = () => {
           </label>
           <div className="w-full flex justify-center items-center gap-4">
             <span className="font-light">
-              Already register?{" "}
-              <Link href="/register" className="font-bold">
-                Login
+              Have no account?{" "}
+              <Link
+                href="/register"
+                className="font-bold hover:text-error duration-300"
+              >
+                Register
               </Link>
             </span>
             <button
@@ -132,7 +135,7 @@ const LoginPage = () => {
               className="btn btn-error rounded-xl w-[8rem] text-white font-light"
               disabled={isSubmitting}
             >
-              Sign Up{" "}
+              Login{" "}
               {isSubmitting && (
                 <span className="loading loading-spinner loading-md"></span>
               )}
@@ -156,6 +159,14 @@ const LoginPage = () => {
           />
           <span>Continue with Google</span>
         </button>
+        <div className="w-full flex justify-end">
+          <Link
+            href={"/forgot_password"}
+            className="text-gray-500 text-sm cursor-pointer font-light hover:text-error duration-300"
+          >
+            Forgot password?
+          </Link>
+        </div>
       </div>
     </div>
   );
