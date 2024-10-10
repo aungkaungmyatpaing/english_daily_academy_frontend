@@ -1,11 +1,24 @@
+import LoadingIndicator from "@/app/components/LoadingIndicator";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
-import React from "react";
+import { Suspense } from "react";
+import Profile from ".";
 
-export default async function ProfilePage() {
+async function CheckSession() {
   const session = await getServerSession();
+
   if (!session) {
-    redirect("/register");
+    redirect("/login");
+    return null;
   }
-  return <div>ProfilePage</div>;
+
+  return <Profile />;
+}
+
+export default function ProfilePage() {
+  return (
+    <Suspense fallback={<LoadingIndicator />}>
+      <CheckSession />
+    </Suspense>
+  );
 }

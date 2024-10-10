@@ -27,6 +27,7 @@ const ForgotPasswordPage = () => {
           theme: "dark",
         });
         setOpenOTP(true);
+        setIsSubmitting(false);
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -54,6 +55,8 @@ const ForgotPasswordPage = () => {
       }
 
       console.error("Error adding to cart:", error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -95,7 +98,10 @@ const ForgotPasswordPage = () => {
                 password
               </span>
               <button className="w-full btn btn-error rounded-lg text-white">
-                Send
+                Send{" "}
+                {isSubmitting && (
+                  <span className="loading loading-spinner loading-md"></span>
+                )}
               </button>
             </form>
           </div>

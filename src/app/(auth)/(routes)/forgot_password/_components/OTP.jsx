@@ -6,6 +6,7 @@ import ResetPassword from "./ResetPassword";
 const OTPVerification = () => {
   const [otp, setOtp] = useState(["", "", "", ""]);
   const [openPasswordReset, setOpenPasswordReset] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [resUserData, setResUserData] = useState(null);
 
@@ -39,6 +40,7 @@ const OTPVerification = () => {
   };
 
   const handleSubmit = async (e) => {
+    setIsSubmitting(true);
     e.preventDefault();
     const otpCode = otp.join("");
     console.log("Submitted OTP:", otpCode);
@@ -85,6 +87,8 @@ const OTPVerification = () => {
       }
 
       console.error("Error adding to cart:", error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -122,7 +126,10 @@ const OTPVerification = () => {
                 type="submit"
                 className="btn btn-error text-white w-full rounded-xl"
               >
-                Next
+                Next{" "}
+                {isSubmitting && (
+                  <span className="loading loading-spinner loading-md"></span>
+                )}
               </button>
             </form>
           </div>

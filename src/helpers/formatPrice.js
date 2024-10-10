@@ -12,3 +12,12 @@ export function formatDate(dateString) {
     minute: "2-digit",
   }).format(date);
 }
+
+export default function PlanDuration({ duration }) {
+  const displayDuration =
+    duration % 12 === 0
+      ? `${duration / 12} year${duration / 12 > 1 ? "s" : ""}`
+      : `${duration} month${duration > 1 ? "s" : ""}`;
+
+  return <span>{displayDuration}</span>;
+}

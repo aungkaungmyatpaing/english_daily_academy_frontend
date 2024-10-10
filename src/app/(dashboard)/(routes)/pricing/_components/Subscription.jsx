@@ -224,19 +224,19 @@ const Subscription = ({ Data, Datas, BearerToken }) => {
                 <div className="w-full flex gap-5 items-center">
                   <i className="fa-solid fa-circle-check text-error"></i>
                   <span className="text-white">
-                    Wallet Name: {PaymentData[0].wallet_name ?? "N/A"}
+                    Wallet Name: {PaymentData[0]?.wallet_name ?? "N/A"}
                   </span>
                 </div>
                 <div className="w-full flex gap-5 items-center">
                   <i className="fa-solid fa-circle-check text-error"></i>
                   <span className="text-white">
-                    Phone Number: {PaymentData[0].account_number ?? "N/A"}
+                    Phone Number: {PaymentData[0]?.account_number ?? "N/A"}
                   </span>
                 </div>
                 <div className="w-full flex gap-5 items-center">
                   <i className="fa-solid fa-circle-check text-error"></i>
                   <span className="text-white">
-                    Account Name: {PaymentData[0].account_name ?? "N/A"}
+                    Account Name: {PaymentData[0]?.account_name ?? "N/A"}
                   </span>
                 </div>
               </div>

@@ -79,7 +79,10 @@ const ResetPassword = (email) => {
         </label>
 
         <button className="w-full btn btn-error rounded-lg text-white">
-          Send
+          Send{" "}
+          {isSubmitting && (
+            <span className="loading loading-spinner loading-md"></span>
+          )}
         </button>
       </form>
     </div>
