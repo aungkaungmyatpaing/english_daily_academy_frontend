@@ -13,6 +13,15 @@ export function formatDate(dateString) {
   }).format(date);
 }
 
+export function shortFormatDate(dateString) {
+  const date = new Date(dateString);
+  return new Intl.DateTimeFormat("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  }).format(date);
+}
+
 export default function PlanDuration({ duration }) {
   const displayDuration =
     duration % 12 === 0

@@ -76,7 +76,7 @@ const Order = ({ BearerToken }) => {
                         <div className="w-full flex flex-col gap-5">
                           <div className="w-full flex justify-between">
                             <span className="text-error">Order ID: </span>
-                            <span className="text-black">4992909</span>
+                            <span className="text-black">{item.id}</span>
                           </div>
                           <div className="w-full flex justify-between">
                             <span className="text-error">Status: </span>
