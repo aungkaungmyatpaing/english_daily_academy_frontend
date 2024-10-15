@@ -21,6 +21,8 @@ const ChapterPage = ({ courseId }) => {
   const [lessons, setLessons] = useState([]);
   const [lessonDetail, setLessonDetail] = useState(null);
   const [IslessonDetail, setIsLessonDetail] = useState(false);
+  const [completeLesson, setCompleteLesson] = useState(false);
+  const [lessonDetailId, setLessonDetailId] = useState(null);
 
   const [miniLoader, setMiniLoader] = useState(true);
   const mainLoading = useSelector((state) => state.mainLoading.mainLoading);
@@ -82,6 +84,7 @@ const ChapterPage = ({ courseId }) => {
   };
 
   const handleLessonDetailClick = () => {
+    document.getElementById("complete_lesson_modal").close();
     setLessonIndex(LessonIndex + 1);
     const newLessonIndex = LessonIndex;
     setIsLessonDetail(true);
@@ -89,6 +92,8 @@ const ChapterPage = ({ courseId }) => {
   };
 
   const fetchLessonDetail = async (id) => {
+    setCompleteLesson(false);
+    setLessonDetailId(id);
     setMiniLoader(true);
     try {
       const response = await axios.get(
@@ -106,7 +111,62 @@ const ChapterPage = ({ courseId }) => {
       setLessonDetail(response.data.data);
 
       console.log("lesson", response.data.data);
+      checkCompleteLesson(courseId, chapterId, id);
+      setMiniLoader(false);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      dispatch(setMainLoading(false));
+    }
+  };
 
+  const checkCompleteLesson = async (courseId, chapter_id, lessonId) => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_HOST}` + "complete-lesson",
+        {
+          headers: {
+            Authorization: `Bearer ${BearerToken}`, // Include Bearer token
+          },
+          params: {
+            // is_premium: 0,
+            course_id: courseId,
+            chapter_id: chapter_id,
+            lesson_id: lessonId,
+          },
+        }
+      );
+      setCompleteLesson(true);
+
+      console.log("check complete-lesson", response.data.data);
+      setMiniLoader(false);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      dispatch(setMainLoading(false));
+    }
+  };
+
+  const submitCompleteLesson = async (courseId, chapter_id, lessonId) => {
+    try {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_HOST}` + "complete-lesson",
+        {
+          // is_premium: 0,
+          course_id: courseId,
+          chapter_id: chapter_id,
+          lesson_id: lessonId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${BearerToken}`, // Include Bearer token
+          },
+        }
+      );
+      setCompleteLesson(true);
+
+      console.log("check complete-lesson", response.data.data);
+      handleLessonDetailClick();
       setMiniLoader(false);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -307,16 +367,50 @@ const ChapterPage = ({ courseId }) => {
                               </div>
                             )}
 
-                            {!lessonDetail[0].is_quiz && (
-                              <div className="w-full flex justify-end">
-                                <button
-                                  onClick={() => handleLessonDetailClick()}
-                                  className="btn btn-error text-white rounded-lg"
-                                >
-                                  Next
-                                </button>
-                              </div>
-                            )}
+                            {lessons.length > LessonIndex &&
+                              !lessonDetail[0].is_quiz && (
+                                <div className="w-full flex justify-end">
+                                  <button
+                                    onClick={() =>
+                                      document
+                                        .getElementById("complete_lesson_modal")
+                                        .showModal()
+                                    }
+                                    className="btn btn-error text-white rounded-lg"
+                                  >
+                                    Next
+                                  </button>
+                                </div>
+                              )}
+                            {lessons.length > LessonIndex &&
+                              lessonDetail[0].is_quiz && (
+                                <div className="w-full flex justify-end">
+                                  <button
+                                    onClick={() => handleLessonDetailClick()}
+                                    className="btn btn-error text-white rounded-lg"
+                                  >
+                                    Next
+                                  </button>
+                                </div>
+                              )}
+                            {lessons.length == LessonIndex &&
+                              !lessonDetail[0].is_quiz &&
+                              !completeLesson && (
+                                <div className="w-full flex justify-end">
+                                  <button
+                                    onClick={() =>
+                                      submitCompleteLesson(
+                                        courseId,
+                                        chapterId,
+                                        lessonDetailId
+                                      )
+                                    }
+                                    className="btn btn-error text-white rounded-lg"
+                                  >
+                                    Make as complete
+                                  </button>
+                                </div>
+                              )}
                           </div>
                         </div>
                       ) : (
@@ -405,6 +499,67 @@ const ChapterPage = ({ courseId }) => {
                   )}
                 </>
               )}
+
+              <dialog id="complete_lesson_modal" className="modal">
+                {completeLesson ? (
+                  <div className="modal-box">
+                    <h3 className="font-bold text-lg">Alert!</h3>
+                    <p className="py-4">
+                      Are you sure? do you want to go to next lesson ?
+                    </p>
+                    <div className="modal-action">
+                      {/* if there is a button in form, it will close the modal */}
+                      <button
+                        onClick={() =>
+                          document
+                            .getElementById("complete_lesson_modal")
+                            .close()
+                        }
+                        className="btn btn-error rounded-lg text-white"
+                      >
+                        No
+                      </button>
+
+                      <button
+                        onClick={() => handleLessonDetailClick()}
+                        className="btn btn-error rounded-lg text-white"
+                      >
+                        Yes
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="modal-box">
+                    <h3 className="font-bold text-lg">Alert!</h3>
+                    <p className="py-4">
+                      Have you completed this lesson to proceed to the next
+                      step?{" "}
+                    </p>
+                    <div className="modal-action">
+                      {/* if there is a button in form, it will close the modal */}
+                      <button
+                        onClick={() =>
+                          submitCompleteLesson(
+                            courseId,
+                            chapterId,
+                            lessonDetailId
+                          )
+                        }
+                        className="btn btn-error rounded-lg text-white"
+                      >
+                        Yes, continue
+                      </button>
+
+                      <button
+                        onClick={() => handleLessonDetailClick()}
+                        className="btn btn-error rounded-lg text-white"
+                      >
+                        No, continue
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </dialog>
             </div>
           </motion.div>
         </AnimatePresence>

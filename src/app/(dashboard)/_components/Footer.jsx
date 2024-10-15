@@ -10,10 +10,15 @@ const Footer = () => {
         width={140}
         height={140}
       />
-      <div className="pl-[4rem] flex gap-5">
-        <span className="text-xs text-secondary">Terms & Conditions</span>
+      <div className="pl-[4rem] flex flex-col text-center gap-1">
+        <div className="flex gap-5">
+          <span className="text-xs text-secondary">Terms & Conditions</span>
+          <span className="text-xs text-secondary">
+            @2023 English Daily Academy.All rights reserved.
+          </span>
+        </div>
         <span className="text-xs text-secondary">
-          @2023 English Daily Academy.All rights reserved.
+          This website is developed by App.com.mm
         </span>
       </div>
       <div className="flex gap-5">

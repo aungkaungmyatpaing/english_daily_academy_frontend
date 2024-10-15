@@ -17,7 +17,7 @@ const HomePage = ({ cms }) => {
   const banner = cms.cms.banner;
   const testimonail = cms.cms.testimonail;
   const faqs = cms.cms.faq;
-  const [currentSlide, setCurrentSlide] = useState(1);
+  const [currentSlide, setCurrentSlide] = useState(0);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -31,14 +31,22 @@ const HomePage = ({ cms }) => {
   }, [cms]);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentSlide((prevSlide) =>
-        prevSlide === banner.length - 1 ? 0 : prevSlide + 1
-      );
-    }, 5000); // Change slide every 5 seconds
+    if (banner.length > 1) {
+      const interval = setInterval(() => {
+        setCurrentSlide((prevSlide) =>
+          prevSlide === banner.length - 1 ? 0 : prevSlide + 1
+        );
+      }, 5000); // Change slide every 5 seconds
 
-    return () => clearInterval(interval);
+      return () => clearInterval(interval); // Clear interval on unmount
+    }
   }, [banner.length]);
+
+  useEffect(() => {
+    if (banner.length === 1) {
+      setCurrentSlide(0); // Set slide to 0 for single banner
+    }
+  }, [banner]);
 
   const handleSubmit = async (e) => {
     setIsSubmitting(true);
@@ -125,9 +133,12 @@ const HomePage = ({ cms }) => {
                         ></button>
                       ))}
                     </div>
-                    <button className="btn btn-error rounded-xl mt-5 text-white w-[30%]">
+                    <Link
+                      href={`/courses`}
+                      className="btn btn-error rounded-xl mt-5 text-white w-[30%]"
+                    >
                       Start With Free Lesson
-                    </button>
+                    </Link>
                   </div>
                 </div>
               ) : (
@@ -162,9 +173,12 @@ const HomePage = ({ cms }) => {
                         ></button>
                       ))}
                     </div>
-                    <button className="btn btn-error rounded-xl mt-5 text-white w-[50%]">
+                    <Link
+                      href={`/courses`}
+                      className="btn btn-error rounded-xl mt-5 text-white w-[50%]"
+                    >
                       Start With Free Lesson
-                    </button>
+                    </Link>
                   </div>
                   <div className="w-full flex justify-center items-center col-span-2">
                     <div className="w-full flex flex-col px-20 gap-10 justify-center items-center">

@@ -93,8 +93,8 @@ const FAQ = () => {
                 ))}
               </>
             ) : (
-              <div className="w-full flex justify-center items-center text-error">
-                No Data
+              <div className="w-full h-[24rem]  flex justify-center items-center">
+                <span className="text-xl text-error font-bold">No Data</span>
               </div>
             )}
           </>
